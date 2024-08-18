@@ -7,12 +7,14 @@ class ImageCreator:
         self.center = [100,220]
         self.start_val = [0,108]
         self.max_lenght = 220 #px
+        self.title_higth = 40
+        self.font_text = "Nasa21-l23X.ttf"
+        self.font_numbers = "Pixellettersfull-BnJ5.ttf"
         pygame.init()
         pygame.font.init()
         self.surface = pygame.image.load("empty.png")
         self.lines_end_points = [] #allows us to later refer to those lines.
-        self.legend_font = pygame.font.Font('freesansbold.ttf', 12)
-        self.title_font = pygame.font.Font('freesansbold.ttf', 32)
+
 
 
 
@@ -60,12 +62,13 @@ class ImageCreator:
 
         #pygame.draw.circle(self.surface, color=1, center=self.center, radius=150)
 
-    def set_legend(self,start,end,center=None):
+    def set_legend(self,start,end,center=None,size = 16):
+        legend_font = pygame.font.Font(self.font_numbers, size)
         #Start
-        text_surface = self.legend_font.render(start, False, 1)
+        text_surface = legend_font.render(start, False, 1)
         self.surface.blit(text_surface, self.lines_end_points[0])
         #END
-        text_surface = self.legend_font.render(end, False, 1)
+        text_surface = legend_font.render(end, False, 1)
         pose = self.lines_end_points[-1]
         pose[0] -= text_surface.get_width() # makes sure that all the Text is visible
         self.surface.blit(text_surface, pose)
@@ -74,12 +77,17 @@ class ImageCreator:
             #get center line
             entrys = len(self.lines_end_points)
             if entrys%2 != 0: #only continue if there is a center
-                text_surface = self.legend_font.render(center, False, 1)
+                text_surface = legend_font.render(center, False, 1)
                 pose = self.lines_end_points[int((entrys-1)/2)]
                 pose = self.move_point_R_direction(pose,2) # get some Distance to the Line
                 pose[0] -= text_surface.get_width()/2  # makes sure that all the Text is centered
                 self.surface.blit(text_surface, pose)
 
+    def set_title(self,Title,size=22):
+        title_font = pygame.font.Font(self.font_text, size)
+        text_surface = title_font.render(Title, False, 1)
+        pose = [self.dimensions[1]/2-text_surface.get_height()/2,self.title_higth]
+        self.surface.blit(text_surface, pose)
     def move_point_R_direction(self, point, line_length):
         polar_point = self.cart_to_polar(point)
         polar_point[0] -= line_length  # adjust r the way you like
@@ -93,7 +101,8 @@ class ImageCreator:
 if __name__ == "__main__":
     creator = ImageCreator()
     creator.draw_lines()
-    creator.set_legend("A","B","M")
+    creator.set_legend("15","50","30")
+    creator.set_title("Hallo ihr")
     creator.save_image()
     #pygame.draw.ellipse(surface,color=(20, 20, 0),rect=[(-extendw), 72, width+2*extendw, height],width=line_width)
     #pygame.draw.arc(surface, (0, 0, 0), [-10, height/2, width+20, height], 0, 3.15, 4)
