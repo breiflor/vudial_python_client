@@ -8,6 +8,7 @@ class ImageCreator:
         self.start_val = [0,108]
         self.max_lenght = 220 #px
         self.title_higth = 40
+        self.icon_size = [36,36]
         self.font_text = "Nasa21-l23X.ttf"
         self.font_numbers = "Pixellettersfull-BnJ5.ttf"
         pygame.init()
@@ -86,13 +87,18 @@ class ImageCreator:
     def set_title(self,Title,size=22):
         title_font = pygame.font.Font(self.font_text, size)
         text_surface = title_font.render(Title, False, 1)
-        pose = [self.dimensions[1]/2-text_surface.get_height()/2,self.title_higth]
+        pose = [self.dimensions[0]/2-text_surface.get_width()/2,self.title_higth]
         self.surface.blit(text_surface, pose)
     def move_point_R_direction(self, point, line_length):
         polar_point = self.cart_to_polar(point)
         polar_point[0] -= line_length  # adjust r the way you like
         line_end = self.polar_to_cart(polar_point)
         return line_end
+
+    def add_icon(self,file):
+        icon = pygame.image.load(file)
+        icon = pygame.transform.scale(icon, self.icon_size)
+        self.surface.blit(icon, [self.dimensions[0]/2-18,0])
 
     def __del__(self):
         pygame.quit()
@@ -103,6 +109,7 @@ if __name__ == "__main__":
     creator.draw_lines()
     creator.set_legend("15","50","30")
     creator.set_title("Hallo ihr")
+    creator.add_icon("cpu.png")
     creator.save_image()
     #pygame.draw.ellipse(surface,color=(20, 20, 0),rect=[(-extendw), 72, width+2*extendw, height],width=line_width)
     #pygame.draw.arc(surface, (0, 0, 0), [-10, height/2, width+20, height], 0, 3.15, 4)
