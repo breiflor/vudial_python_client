@@ -51,7 +51,7 @@ class Dial:
 
 if __name__ == "__main__":
     d = Dial("90002E000650564139323920","cTpAWYuRpA2zx75Yh961Cg","vumeter.local:5340") #currently the default keys are used - move to config file once in production
-    #d.set_dial(56)
-    #d.set_image("cpu-temp.png")
+    #d.set_dial(100)
+    d.set_image("arc_image.png")
     #d.get_image()
-    d.set_color(0,0,0)
+    #d.set_color(0,80,0)

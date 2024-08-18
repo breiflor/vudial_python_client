@@ -7,8 +7,9 @@ class ImageCreator:
         self.center = [100,220]
         self.start_val = [0,108]
         self.max_lenght = 220 #px
-        self.title_higth = 40
-        self.icon_size = [36,36]
+        self.title_higth = 43
+        self.icon_size = [43,43]
+        self.icon_only = [70,70]
         self.font_text = "Nasa21-l23X.ttf"
         self.font_numbers = "Pixellettersfull-BnJ5.ttf"
         pygame.init()
@@ -63,7 +64,7 @@ class ImageCreator:
 
         #pygame.draw.circle(self.surface, color=1, center=self.center, radius=150)
 
-    def set_legend(self,start,end,center=None,size = 16):
+    def set_legend(self,start,end,center=None,size = 16,unit=None):
         legend_font = pygame.font.Font(self.font_numbers, size)
         #Start
         text_surface = legend_font.render(start, False, 1)
@@ -83,6 +84,9 @@ class ImageCreator:
                 pose = self.move_point_R_direction(pose,2) # get some Distance to the Line
                 pose[0] -= text_surface.get_width()/2  # makes sure that all the Text is centered
                 self.surface.blit(text_surface, pose)
+        if unit is not None :
+            text_surface = legend_font.render(unit, False, 1)
+            self.surface.blit(text_surface, [self.dimensions[0]/2-text_surface.get_width()/2,self.dimensions[1]-text_surface.get_height()])
 
     def set_title(self,Title,size=22):
         title_font = pygame.font.Font(self.font_text, size)
@@ -95,10 +99,14 @@ class ImageCreator:
         line_end = self.polar_to_cart(polar_point)
         return line_end
 
-    def add_icon(self,file):
+    def add_icon(self,file,icon_only=False):
         icon = pygame.image.load(file)
-        icon = pygame.transform.scale(icon, self.icon_size)
-        self.surface.blit(icon, [self.dimensions[0]/2-18,0])
+        if icon_only:
+            icon = pygame.transform.scale(icon, self.icon_only)
+            self.surface.blit(icon, [self.dimensions[0] / 2 - self.icon_only[0]/2, 0])
+        else:
+            icon = pygame.transform.scale(icon, self.icon_size)
+            self.surface.blit(icon, [self.dimensions[0]/2-self.icon_size[0]/2,0])
 
     def __del__(self):
         pygame.quit()
@@ -107,9 +115,9 @@ class ImageCreator:
 if __name__ == "__main__":
     creator = ImageCreator()
     creator.draw_lines()
-    creator.set_legend("15","50","30")
-    creator.set_title("Hallo ihr")
-    creator.add_icon("cpu.png")
+    creator.set_legend("15","50","30",unit="kWh")
+    #creator.set_title("Hallo ihr")
+    creator.add_icon("solar-panel-vector-icon.jpg",True)
     creator.save_image()
     #pygame.draw.ellipse(surface,color=(20, 20, 0),rect=[(-extendw), 72, width+2*extendw, height],width=line_width)
     #pygame.draw.arc(surface, (0, 0, 0), [-10, height/2, width+20, height], 0, 3.15, 4)
