@@ -8,7 +8,11 @@ class ImageCreator:
         self.start_val = [0,108]
         self.max_lenght = 220 #px
         pygame.init()
+        pygame.font.init()
         self.surface = pygame.image.load("empty.png")
+        self.lines_end_points = [] #allows us to later refer to those lines.
+        self.legend_font = pygame.font.Font('freesansbold.ttf', 12)
+        self.title_font = pygame.font.Font('freesansbold.ttf', 32)
 
 
 
@@ -45,12 +49,43 @@ class ImageCreator:
     def save_image(self,name="arc_image.png"):
         pygame.image.save(self.surface, name)
 
-    def draw_lines(self,subsections = 7):
+    def draw_lines(self,subsections = 5,line_length = 12, line_width=3,fill=False):
         line = np.linspace(0,220,num=subsections) # if issues occur dtype=int
-        for point in line:
-            pygame.draw.circle(self.surface,color=1,center=self.calc_new_coordinate(self.start_val,point),radius=3)
+        for segment in line:
+            point = self.calc_new_coordinate(self.start_val,segment)
+            line_end = self.move_point_R_direction(point, line_length)
+            self.lines_end_points.append(line_end)
+            #pygame.draw.circle(self.surface,color=1,center=point,radius=3)
+            pygame.draw.line(self.surface,color=1,start_pos=point,end_pos=line_end,width=line_width)
 
         #pygame.draw.circle(self.surface, color=1, center=self.center, radius=150)
+
+    def set_legend(self,start,end,center=None):
+        #Start
+        text_surface = self.legend_font.render(start, False, 1)
+        self.surface.blit(text_surface, self.lines_end_points[0])
+        #END
+        text_surface = self.legend_font.render(end, False, 1)
+        pose = self.lines_end_points[-1]
+        pose[0] -= text_surface.get_width() # makes sure that all the Text is visible
+        self.surface.blit(text_surface, pose)
+        #Center
+        if center is not None :
+            #get center line
+            entrys = len(self.lines_end_points)
+            if entrys%2 != 0: #only continue if there is a center
+                text_surface = self.legend_font.render(center, False, 1)
+                pose = self.lines_end_points[int((entrys-1)/2)]
+                pose = self.move_point_R_direction(pose,2) # get some Distance to the Line
+                pose[0] -= text_surface.get_width()/2  # makes sure that all the Text is centered
+                self.surface.blit(text_surface, pose)
+
+    def move_point_R_direction(self, point, line_length):
+        polar_point = self.cart_to_polar(point)
+        polar_point[0] -= line_length  # adjust r the way you like
+        line_end = self.polar_to_cart(polar_point)
+        return line_end
+
     def __del__(self):
         pygame.quit()
 
@@ -58,6 +93,7 @@ class ImageCreator:
 if __name__ == "__main__":
     creator = ImageCreator()
     creator.draw_lines()
+    creator.set_legend("A","B","M")
     creator.save_image()
     #pygame.draw.ellipse(surface,color=(20, 20, 0),rect=[(-extendw), 72, width+2*extendw, height],width=line_width)
     #pygame.draw.arc(surface, (0, 0, 0), [-10, height/2, width+20, height], 0, 3.15, 4)
