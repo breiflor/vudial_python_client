@@ -64,7 +64,7 @@ class ImageCreator:
 
         #pygame.draw.circle(self.surface, color=1, center=self.center, radius=150)
 
-    def set_legend(self,start,end,center=None,size = 16,unit=None):
+    def set_legend(self,start,end,center=None,size = 20,unit=None):
         legend_font = pygame.font.Font(self.font_numbers, size)
         #Start
         text_surface = legend_font.render(start, False, 1)
@@ -110,7 +110,7 @@ class ImageCreator:
 
     def create(self,dial,filepath):
         self.draw_lines(dial.segments)
-        self.set_legend(dial.range[0],dial.range[1],dial.range[2],unit=dial.unit)
+        self.set_legend(dial.range[0],center=dial.range[1],end=dial.range[2],unit=dial.unit)
         if dial.title is not None:
             self.set_title(dial.title)
         if dial.icon is not None:
