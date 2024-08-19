@@ -108,6 +108,15 @@ class ImageCreator:
             icon = pygame.transform.scale(icon, self.icon_size)
             self.surface.blit(icon, [self.dimensions[0]/2-self.icon_size[0]/2,0])
 
+    def create(self,dial,filepath):
+        self.draw_lines()
+        self.set_legend(dial.range[0],dial.range[1],dial.range[2],unit=dial.unit)
+        if dial.title is not None:
+            self.set_title(dial.title)
+        if dial.icon is not None:
+            self.add_icon(dial.icon,dial.title is None)
+        self.save_image(filepath)
+
     def __del__(self):
         pygame.quit()
 
@@ -117,7 +126,7 @@ if __name__ == "__main__":
     creator.draw_lines()
     creator.set_legend("15","50","30",unit="kWh")
     #creator.set_title("Hallo ihr")
-    creator.add_icon("solar-panel-vector-icon.jpg",True)
+    creator.add_icon("solar-panel.jpg",True)
     creator.save_image()
     #pygame.draw.ellipse(surface,color=(20, 20, 0),rect=[(-extendw), 72, width+2*extendw, height],width=line_width)
     #pygame.draw.arc(surface, (0, 0, 0), [-10, height/2, width+20, height], 0, 3.15, 4)

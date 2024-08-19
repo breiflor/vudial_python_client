@@ -9,6 +9,12 @@ class Dial:
         self.server = server
         self.light = False
         self.color = 5,5,5
+        self.range = ["0",None,"100"]
+        self.unit = ""
+        self.title = None
+        self.dial = 0
+        self.segments = 5
+        self.icon = "icons/cpu.png"
         #time.sleep(5)
         #self.get_data()
 
