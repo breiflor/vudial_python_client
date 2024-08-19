@@ -109,7 +109,7 @@ class ImageCreator:
             self.surface.blit(icon, [self.dimensions[0]/2-self.icon_size[0]/2,0])
 
     def create(self,dial,filepath):
-        self.draw_lines()
+        self.draw_lines(dial.segments)
         self.set_legend(dial.range[0],dial.range[1],dial.range[2],unit=dial.unit)
         if dial.title is not None:
             self.set_title(dial.title)

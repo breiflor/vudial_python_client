@@ -22,9 +22,12 @@ class Dial:
         return max(min(value, max_val), min_val)
 
     def set_dial(self,percentage):
-        message = f"http://{self.server}/api/v0/dial/{self.uuid}/set?key={self.secret}&value={percentage}"
-        self.dial = percentage
-        requests.get(message)
+        try:
+            message = f"http://{self.server}/api/v0/dial/{self.uuid}/set?key={self.secret}&value={percentage}"
+            self.dial = percentage
+            requests.get(message)
+        except:
+            print("sending error")
 
     def get_data(self):
         message = f"http://{self.server}/api/v0/dial/{self.uuid}/status?key={self.secret}"
@@ -38,16 +41,22 @@ class Dial:
         if not self.light:
             self.set_color(self.color[0],self.color[1],self.color[2])
     def set_image(self,imagefile):
-        url = f"http://{self.server}/api/v0/dial/{self.uuid}/image/set?key={self.secret}"
-        with open(imagefile, 'rb') as f:
-            files = {"imgfile": f}
-            response = requests.post(url,files=files)
+        try:
+            url = f"http://{self.server}/api/v0/dial/{self.uuid}/image/set?key={self.secret}"
+            with open(imagefile, 'rb') as f:
+                files = {"imgfile": f}
+                response = requests.post(url,files=files)
+        except:
+            print("sending error")
 
     def get_image(self):
-        message = f"http://{self.server}/api/v0/dial/{self.uuid}/image/get?key={self.secret}"
-        data = requests.get(message)
-        with open("test.png","wb") as r:
-            r.write(data.content)
+        try:
+            message = f"http://{self.server}/api/v0/dial/{self.uuid}/image/get?key={self.secret}"
+            data = requests.get(message)
+            with open("test.png","wb") as r:
+                r.write(data.content)
+        except:
+            print("sending error")
     def set_color(self,r=0,g=0,b=0,w=0):
         #sending white is currently not supported
         try:
