@@ -92,14 +92,16 @@ class Controller:
             self.dails[int(msg.topic.split("/")[1])].range[2] = msg.payload.decode("utf-8")
         elif "center" in msg.topic:
             self.dails[int(msg.topic.split("/")[1])].range[1] = msg.payload.decode("utf-8")
-            # TODO add an option to unset
 
     def handle_unit(self, msg):
         self.dails[int(msg.topic.split("/")[1])].unit = msg.payload.decode("utf-8")
 
     def handle_title(self, msg):
-        self.dails[int(msg.topic.split("/")[1])].title = msg.payload.decode("utf-8")
-        #TODO add an option to unset
+        title = msg.payload.decode("utf-8")
+        if title == "":
+            self.dails[int(msg.topic.split("/")[1])].title = None
+        else:
+            self.dails[int(msg.topic.split("/")[1])].title = title
 
     def handle_icon(self, msg):
         self.dails[int(msg.topic.split("/")[1])].icon = "icons/"+msg.payload.decode("utf-8")
@@ -118,6 +120,8 @@ class Controller:
 
 
 if __name__ == "__main__":
+    time.sleep(20)
     controller = Controller()
     while True:
-        time.sleep(1)
+        time.sleep(21600) # update icon list every 6h
+        controller.list_icons()

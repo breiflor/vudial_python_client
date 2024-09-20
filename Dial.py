@@ -30,16 +30,20 @@ class Dial:
             print("sending error")
 
     def get_data(self):
-        message = f"http://{self.server}/api/v0/dial/{self.uuid}/status?key={self.secret}"
-        data = json.loads(requests.get(message).text)["data"]
-        print(data)
-        self.name = data["dial_name"]
-        self.dial = data["value"]
-        self.color = data["rgbw"]
+        try:
+            message = f"http://{self.server}/api/v0/dial/{self.uuid}/status?key={self.secret}"
+            data = json.loads(requests.get(message).text)["data"]
+            print(data)
+            self.name = data["dial_name"]
+            self.dial = data["value"]
+            self.color = data["rgbw"]
+        except:
+            print("sending error")
 
     def light_on(self):
         if not self.light:
             self.set_color(self.color[0],self.color[1],self.color[2])
+
     def set_image(self,imagefile):
         try:
             url = f"http://{self.server}/api/v0/dial/{self.uuid}/image/set?key={self.secret}"
@@ -57,6 +61,7 @@ class Dial:
                 r.write(data.content)
         except:
             print("sending error")
+
     def set_color(self,r=0,g=0,b=0,w=0):
         #sending white is currently not supported
         try:
@@ -71,9 +76,12 @@ class Dial:
             print("sending error")
 
     def set_name(self,name):
-        self.name = name
-        message = f"http://{self.server}/api/v0/dial/{self.uuid}/name?key={self.secret}&name={self.name}"
-        requests.get(message)
+        try:
+            self.name = name
+            message = f"http://{self.server}/api/v0/dial/{self.uuid}/name?key={self.secret}&name={self.name}"
+            requests.get(message)
+        except:
+            print("sending error")
 
 
 if __name__ == "__main__":
